@@ -171,9 +171,7 @@ class RAGService:
 
             # Log the current mode
             if self.openai_available and len(self.vector_store.embeddings) > 0:
-                logger.info(
-                    "🚀 RAG service initialized in FULL MODE (embeddings + LLM)"
-                )
+                logger.info("🚀 RAG service initialized in FULL MODE (embeddings + LLM)")
             elif self.openai_available:
                 logger.info(
                     "🚀 RAG service initialized in LLM-ONLY MODE (text search + LLM)"
