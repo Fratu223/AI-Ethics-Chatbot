@@ -1,3 +1,5 @@
+# flake8: noqa: F401
+
 import asyncio
 import os
 from pathlib import Path
