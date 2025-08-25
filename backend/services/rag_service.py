@@ -536,7 +536,7 @@ Provide a focused answer in under 150 words, citing sources when relevant."""
 
         # Very focused, smaller documents
         sample_docs = {
-            "ai_alignment.md": """# AI Alignment Basics
+"ai_alignment.md": """# AI Alignment Basics
 
 AI alignment ensures AI systems pursue goals aligned with human values.
 
@@ -551,7 +551,7 @@ Specifying what we want AI to do is difficult. Misaligned objectives can cause u
 ## Current Focus
 Researchers work on reward modeling, interpretability, and safe exploration.
 """,
-            "ai_safety.md": """# AI Safety Principles
+"ai_safety.md": """# AI Safety Principles
 
 ## Core Principles
 
@@ -568,7 +568,7 @@ Researchers work on reward modeling, interpretability, and safe exploration.
 - Continuous assessment of performance
 - Incident response procedures
 """,
-            "ai_ethics.md": """# AI Ethics Overview
+"ai_ethics.md": """# AI Ethics Overview
 
 ## Ethical Frameworks
 - **Consequentialist**: Judge by outcomes and consequences
