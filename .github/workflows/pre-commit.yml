@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+  with:
+    ref: ${{ github.head_ref }}
+    fetch-depth: 0
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         
@@ -72,3 +75,11 @@ jobs:
         echo "- Complex linting violations"
         echo "- Files that need manual review"
         exit 1
+
+- name: Push changes back
+  run: |
+    git config user.name "github-actions[bot]"
+    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    git add .
+    git commit -m "style: auto-fix pre-commit issues" || echo "No changes to commit"
+    git push origin HEAD:${{ github.head_ref }}
