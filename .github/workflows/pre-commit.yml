@@ -13,73 +13,65 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-  with:
-    ref: ${{ github.head_ref }}
-    fetch-depth: 0
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-        
-    - name: Install pre-commit
-      run: pip install pre-commit
-      
-    - name: Run pre-commit
-      id: pre_commit
-      run: |
-        if pre-commit run --all-files; then
-          echo "pre_commit_passed=true" >> $GITHUB_OUTPUT
-        else
-          echo "pre_commit_passed=false" >> $GITHUB_OUTPUT
-        fi
-      continue-on-error: true
-      
-    - name: Check for changes (excluding workflows)
-      id: check_changes
-      run: |
-        # Add all changes
-        git add .
-        # Remove workflow files from staging
-        git reset -- .github/workflows/ || true
-        # Check if there are any staged changes
-        if [ -n "$(git diff --cached --name-only)" ]; then
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-          echo "Changes detected (excluding workflows)"
-          echo "Changed files:"
-          git diff --cached --name-only
-        else
-          echo "has_changes=false" >> $GITHUB_OUTPUT
-          echo "No changes to commit"
-        fi
-        
-    - name: Commit and push changes
-      if: steps.check_changes.outputs.has_changes == 'true'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -m "style: auto-fix pre-commit issues
+      - name: Checkout PR/source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-        [skip ci]"
-        git push
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-    - name: Report unfixable issues
-      if: steps.pre_commit.outputs.pre_commit_passed == 'false' && steps.check_changes.outputs.has_changes == 'false'
-      run: |
-        echo "⚠️ Pre-commit found issues that couldn't be auto-fixed!"
-        echo "Please check the pre-commit output above and fix manually."
-        echo "Common issues:"
-        echo "- Syntax errors in Python files"
-        echo "- Complex linting violations"
-        echo "- Files that need manual review"
-        exit 1
+      - name: Install pre-commit
+        run: pip install pre-commit
 
-- name: Push changes back
-  run: |
-    git config user.name "github-actions[bot]"
-    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    git add .
-    git commit -m "style: auto-fix pre-commit issues" || echo "No changes to commit"
-    git push origin HEAD:${{ github.head_ref }}
+      - name: Run pre-commit
+        id: pre_commit
+        run: |
+          set -e
+          pre-commit install
+          if pre-commit run --all-files; then
+            echo "pre_commit_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "pre_commit_passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Check for changes (excluding workflows)
+        id: check_changes
+        run: |
+          # Stage any auto-fixes
+          git add -A
+          # Avoid committing workflow changes
+          git reset -- .github/workflows/ || true
+          if [ -n "$(git diff --cached --name-only)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected (excluding workflows)"
+            echo "Changed files:"
+            git diff --cached --name-only
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes to commit"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "style: auto-fix pre-commit issues [skip ci]"
+          git push origin HEAD:${{ github.head_ref || github.ref_name }}
+
+      - name: Report unfixable issues
+        if: steps.pre_commit.outputs.pre_commit_passed == 'false' && steps.check_changes.outputs.has_changes == 'false'
+        run: |
+          echo "⚠️ Pre-commit found issues that couldn't be auto-fixed!"
+          echo "Please check the pre-commit output above and fix manually."
+          echo "Common issues:"
+          echo "- Syntax errors in Python files"
+          echo "- Complex linting violations"
+          echo "- Files that need manual review"
+          exit 1
