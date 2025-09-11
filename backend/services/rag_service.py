@@ -568,7 +568,7 @@ Researchers work on reward modeling, interpretability, and safe exploration.
 - Continuous assessment of performance
 - Incident response procedures
 """,
-            "ai_ethics.md": """# AI Ethics Overview
+"ai_ethics.md": """# AI Ethics Overview
 
 ## Ethical Frameworks
 - **Consequentialist**: Judge by outcomes and consequences
