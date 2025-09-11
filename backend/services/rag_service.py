@@ -264,7 +264,7 @@ class RAGService:
 
 Your question: "{question}"
 
-**Current Status:** 
+**Current Status:**
 - OpenAI API: {'✅ Available' if self.openai_available else '❌ Quota exceeded or unavailable'}
 - Embeddings: {'✅ Loaded' if len(getattr(self.vector_store, 'embeddings', [])) > 0 else '❌ Not available'}
 - Documents: {'✅ Loaded' if len(self.document_chunks) > 0 else '❌ Not loaded'}
@@ -556,7 +556,7 @@ Researchers work on reward modeling, interpretability, and safe exploration.
 ## Core Principles
 
 **Robustness**: Reliable performance and graceful failures
-**Human Oversight**: Meaningful human control over AI systems  
+**Human Oversight**: Meaningful human control over AI systems
 **Transparency**: Interpretable decision-making
 **Fairness**: Treating all individuals and groups fairly
 **Privacy**: Protecting personal data and rights
@@ -568,7 +568,7 @@ Researchers work on reward modeling, interpretability, and safe exploration.
 - Continuous assessment of performance
 - Incident response procedures
 """,
-"ai_ethics.md": """# AI Ethics Overview
+            "ai_ethics.md": """# AI Ethics Overview
 
 ## Ethical Frameworks
 - **Consequentialist**: Judge by outcomes and consequences
@@ -578,7 +578,7 @@ Researchers work on reward modeling, interpretability, and safe exploration.
 ## Key Issues
 
 **Bias**: AI can perpetuate social biases
-**Privacy**: Surveillance and data collection concerns  
+**Privacy**: Surveillance and data collection concerns
 **Autonomy**: Impact on human decision-making
 **Employment**: Job displacement from automation
 
