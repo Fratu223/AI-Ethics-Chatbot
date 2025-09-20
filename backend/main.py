@@ -1,3 +1,5 @@
+# flake8: noqa: F401, E501
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
